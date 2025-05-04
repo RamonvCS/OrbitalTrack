@@ -9,7 +9,7 @@
         {% for launch in launches %}
             <li>
                 <strong>{{ launch.name }}</strong><br>
-                Date: {{ launch.net }}<br>
+                Date: {{ launch.formatted_net }}<br>
                 Agency: {{ launch.launch_service_provider.name }}
                 <hr>
             </li>
