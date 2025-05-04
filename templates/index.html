@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OrbitalTrack - Upcoming Launches</title>
+</head>
+<body>
+    <h1>Upcoming Space Launches</h1>
+    <ul>
+        {% for launch in launches %}
+            <li>
+                <strong>{{ launch.name }}</strong><br>
+                Date: {{ launch.net }}<br>
+                Agency: {{ launch.launch_service_provider.name }}
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
