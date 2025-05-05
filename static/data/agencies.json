@@ -1,0 +1,83 @@
+[
+  {
+    "name": "NASA",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "founded": 1958,
+    "launches": 1200,
+    "website": "https://www.nasa.gov",
+    "logo": "nasa-logo-removebg.png"
+  },
+  {
+    "name": "SpaceX",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "founded": 2002,
+    "launches": 300,
+    "website": "https://www.spacex.com",
+    "logo": "spacex.svg"
+  },
+  {
+    "name": "Blue Origin",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "founded": 2000,
+    "launches": 25,
+    "website": "https://www.blueorigin.com",
+    "logo": "blueorigin.svg"
+  },
+  {
+    "name": "ULA (United Launch Alliance)",
+    "country": "USA",
+    "flag": "🇺🇸",
+    "founded": 2006,
+    "launches": 150,
+    "website": "https://www.ulalaunch.com",
+    "logo": "ula.svg"
+  },
+  {
+    "name": "ESA",
+    "country": "EU",
+    "flag": "🇪🇺",
+    "founded": 1975,
+    "launches": 300,
+    "logo": "esa.svg",
+    "news": "https://www.space.com/topics/european-space-agency"
+  },
+  {
+    "name": "Roscosmos",
+    "country": "Russia",
+    "flag": "🇷🇺",
+    "founded": 1992,
+    "launches": 1100,
+    "logo": "roscosmos.svg",
+    "news": "https://www.reuters.com/technology/space/"
+  },
+  {
+    "name": "JAXA",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "founded": 2003,
+    "launches": 250,
+    "logo": "jaxa.svg",
+    "news": "https://www.nytimes.com/topic/organization/japan-aerospace-exploration-agency"
+  },
+  {
+    "name": "CNSA",
+    "country": "China",
+    "flag": "🇨🇳",
+    "founded": 1993,
+    "launches": 400,
+    "logo": "cnsa.svg",
+    "news": "https://www.cnn.com/china-space-program"
+  },
+  {
+    "name": "ISRO",
+    "country": "India",
+    "flag": "🇮🇳",
+    "founded": 1969,
+    "launches": 375,
+    "logo": "isro.svg",
+    "news": "https://www.bbc.com/news/world/asia/india"
+  }
+]
