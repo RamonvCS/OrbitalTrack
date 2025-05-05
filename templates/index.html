@@ -78,6 +78,31 @@
 </head>
 
 <body class="bg-dark text-light">
+  <!-- MODAL de Detalles de la Misión -->
+  <div class="modal fade" id="launchModal" tabindex="-1" aria-labelledby="launchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="launchModalLabel">Mission Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center mb-3">
+            <img id="modalLogo" src="" alt="Agency Logo" style="width: 60px; height: 60px; object-fit: contain; margin-right: 15px;">
+            <div>
+              <h5 id="modalMission" class="mb-1 text-info">Mission Name</h5>
+              <p class="mb-0 text-muted"><small id="modalDate"></small></p>
+            </div>
+          </div>
+          <p><strong>Agency:</strong> <span id="modalAgency"></span></p>
+          <p><strong>Pad:</strong> <span id="modalPad"></span></p>
+          <p><strong>Description:</strong> <span id="modalDesc"></span></p>
+          <p><strong>More Info:</strong> <a id="modalLink" href="#" target="_blank">Launch Web Page</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg" style="background-color: #36a5cf;">
     <div class="container-fluid">
@@ -90,7 +115,7 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="#launches">Upcoming Launches</a></li>
           <li class="nav-item"><a class="nav-link" href="#map">Map</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Agencies</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('agencies') }}">Agencies</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Satellites</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Analytics</a></li>
           <li class="nav-item"><a class="nav-link" href="#">About</a></li>
@@ -141,6 +166,18 @@
                   <strong>Agency:</strong> {{ launch.launch_service_provider.name }}<br>
                   <strong>Countdown:</strong> <span class="countdown" data-launch="{{ launch.formatted_net }}"></span>
                 </p>
+                <button class="btn btn-sm btn-outline-info mt-2"
+                  onclick="openModal(
+                    `{{ launch.name }}`,
+                    `{{ launch.launch_service_provider.name }}`,
+                    `{{ launch.pad.name }}`,
+                    `{{ launch.formatted_net }}`,
+                    `{{ launch.mission.description | default('No description', true) }}`,
+                    `{{ launch.launch_service_provider.name|lower|replace(' ', '') }}`,
+                    `{{ launch.webcast | default('#') }}`
+                  )">
+                  View Details
+                </button>
               </div>
             </div>
           </div>
@@ -157,26 +194,25 @@
   <!-- Back to Top Button -->
   <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">↑</button>
 
-  <!-- JS -->
+  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
   <script>
-    // Mapa con tiles
     const map = L.map('map', {
-      worldCopyJump: true, // mantiene el usuario centrado sin duplicar el mapa
-      maxBoundsViscosity: 1.0, // limita el movimiento fuera del área
-      maxBounds: [[-85, -180], [85, 180]], // área global
-      minZoom: 2, // evita hacer mucho zoom out
+      worldCopyJump: true,
+      maxBoundsViscosity: 1.0,
+      maxBounds: [[-85, -180], [85, 180]],
+      minZoom: 2,
       zoomSnap: 0.25,
       zoomDelta: 0.25
     }).setView([20, 0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 250,
-        noWrap: false, // 🛑 evita que se repita horizontalmente
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
-      
+      maxZoom: 250,
+      noWrap: false,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
     const launches = {{ launches|tojson }};
     launches.forEach(launch => {
@@ -192,7 +228,6 @@
       }
     });
 
-    // Countdown
     document.querySelectorAll('.countdown').forEach(el => {
       const launchDate = new Date(Date.parse(el.dataset.launch + "Z"));
       const now = new Date();
@@ -206,18 +241,29 @@
       }
     });
 
-    // Filtro de agencia
     document.getElementById('agencyFilter').addEventListener('change', function () {
       const selected = this.value;
       document.querySelectorAll('.launch-card').forEach(card => {
         const agency = card.dataset.agency;
-        if (!selected || agency === selected) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+        card.style.display = (!selected || agency === selected) ? 'block' : 'none';
       });
     });
+
+    function openModal(mission, agency, pad, date, description, logoKey, link) {
+      document.getElementById('modalMission').textContent = mission;
+      document.getElementById('modalAgency').textContent = agency;
+      document.getElementById('modalPad').textContent = pad;
+      document.getElementById('modalDate').textContent = date;
+      document.getElementById('modalDesc').textContent = description;
+      document.getElementById('modalLink').href = link;
+      document.getElementById('modalLogo').src = `/static/logos/${logoKey}.svg`;
+      document.getElementById('modalLogo').onerror = function () {
+        this.style.display = 'none';
+      };
+
+      const modal = new bootstrap.Modal(document.getElementById('launchModal'));
+      modal.show();
+    }
   </script>
 </body>
 </html>
