@@ -1,0 +1,57 @@
+[
+    {
+      "name": "NASA",
+      "country": "USA",
+      "flag": "🇺🇸",
+      "founded": 1958,
+      "launches": 1200,
+      "website": "https://www.nasa.gov",
+      "logo": "nasa-logo-removebg.png"
+    },
+    {
+      "name": "ESA",
+      "country": "EU",
+      "flag": "🇪🇺",
+      "founded": 1975,
+      "launches": 300,
+      "website": "https://www.esa.int",
+      "logo": "esa.svg"
+    },
+    {
+      "name": "Roscosmos",
+      "country": "Russia",
+      "flag": "🇷🇺",
+      "founded": 1992,
+      "launches": 1100,
+      "website": "https://www.roscosmos.ru",
+      "logo": "roscosmos.svg"
+    },
+    {
+      "name": "JAXA",
+      "country": "Japan",
+      "flag": "🇯🇵",
+      "founded": 2003,
+      "launches": 250,
+      "website": "https://www.jaxa.jp",
+      "logo": "jaxa.svg"
+    },
+    {
+      "name": "CNSA",
+      "country": "China",
+      "flag": "🇨🇳",
+      "founded": 1993,
+      "launches": 400,
+      "website": "http://www.cnsa.gov.cn",
+      "logo": "cnsa.svg"
+    },
+    {
+      "name": "ISRO",
+      "country": "India",
+      "flag": "🇮🇳",
+      "founded": 1969,
+      "launches": 375,
+      "website": "https://www.isro.gov.in",
+      "logo": "isro.svg"
+    }
+  ]
+  

@@ -16,5 +16,10 @@ def index():
             launch["formatted_net"] = net_raw
     return render_template('index.html', launches=launches)
 
+@app.route('/agencies')
+def agencies():
+    return render_template('agencies.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
