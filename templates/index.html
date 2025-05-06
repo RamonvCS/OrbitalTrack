@@ -104,7 +104,7 @@
   </div>
 
   <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg" style="background-color: #36a5cf;">
+  <nav class="navbar navbar-expand-lg" style="background-color: #1098f7;">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">🚀 OrbitalTrack</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -148,43 +148,36 @@
       {% endfor %}
     </select>
 
-    <!-- Tarjetas de lanzamientos -->
-    <div class="row">
-      {% for launch in launches %}
-        <div class="col-md-6 mb-4 launch-card" data-agency="{{ launch.launch_service_provider.name|lower|replace(' ', '') }}">
-          <div class="card text-white shadow-sm">
-            <div class="card-body d-flex align-items-center">
-              <img src="{{ url_for('static', filename='logos/' + launch.launch_service_provider.name|lower|replace(' ', '') + '.svg') }}"
-                   onerror="this.style.display='none';"
-                   alt="Agency Logo"
-                   class="me-3"
-                   style="width: 40px; height: 40px; object-fit: contain;">
-              <div>
-                <h5 class="card-title mb-1">{{ launch.name }}</h5>
-                <p class="card-text mb-0">
-                  <strong>Date:</strong> {{ launch.formatted_net }}<br>
-                  <strong>Agency:</strong> {{ launch.launch_service_provider.name }}<br>
-                  <strong>Countdown:</strong> <span class="countdown" data-launch="{{ launch.formatted_net }}"></span>
-                </p>
-                <button class="btn btn-sm btn-outline-info mt-2"
-                  onclick="openModal(
-                    `{{ launch.name }}`,
-                    `{{ launch.launch_service_provider.name }}`,
-                    `{{ launch.pad.name }}`,
-                    `{{ launch.formatted_net }}`,
-                    `{{ launch.mission.description | default('No description', true) }}`,
-                    `{{ launch.launch_service_provider.name|lower|replace(' ', '') }}`,
-                    `{{ launch.webcast | default('#') }}`
-                  )">
-                  View Details
-                </button>
-              </div>
-            </div>
-          </div>
+<!-- Tarjetas de lanzamientos -->
+<div class="row">
+  {% for launch in launches %}
+    <div class="col-md-6 mb-4 launch-card" data-agency="{{ launch.launch_service_provider.name|lower|replace(' ', '') }}">
+      <div class="card text-white shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-1">{{ launch.name }}</h5>
+          <p class="card-text mb-0">
+            <strong>Date:</strong> {{ launch.formatted_net }}<br>
+            <strong>Agency:</strong> {{ launch.launch_service_provider.name }}<br>
+            <strong>Countdown:</strong> <span class="countdown" data-launch="{{ launch.formatted_net }}"></span>
+          </p>
+          <button class="btn btn-sm btn-outline-info mt-2"
+            onclick="openModal(
+              `{{ launch.name }}`,
+              `{{ launch.launch_service_provider.name }}`,
+              `{{ launch.pad.name }}`,
+              `{{ launch.formatted_net }}`,
+              `{{ launch.mission.description | default('No description', true) }}`,
+              `{{ launch.launch_service_provider.name|lower|replace(' ', '') }}`,
+              `{{ launch.webcast | default('#') }}`
+            )">
+            View Details
+          </button>
         </div>
-      {% endfor %}
+      </div>
     </div>
-  </div>
+  {% endfor %}
+</div>
+
 
   <!-- FOOTER -->
   <footer class="text-center text-muted py-4">
