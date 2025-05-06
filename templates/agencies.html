@@ -13,6 +13,22 @@
       background-attachment: fixed;
       color: white;
       font-family: 'Segoe UI', sans-serif;
+      position: relative;
+      z-index: 0;
+      overflow-x: hidden;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    main, nav, footer, .container, .card {
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -65,32 +81,26 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg" style="background-color: #36a5cf;">
-  <div class="container-fluid">
-    <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="/">
-      <span style="font-size: 1.5rem;">🚀</span>
-      <span class="ms-2">OrbitalTrack</span>
-    </a>
+  <div id="particles-js"></div>
 
-    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="/">Home</a></li>
-        <!-- <li class="nav-item"><a class="nav-link text-white fw-semibold" href="/launches">Launches</a></li> -->
-        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="/agencies">Agencies</a></li>
-        <!-- <li class="nav-item"><a class="nav-link text-white fw-semibold" href="/satellites">Satellites</a></li> -->
-        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="/analytics">Analytics</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg" style="background-color: #1098f7;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🚀 OrbitalTrack</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="/">Upcoming Launches</a></li>
+          <li class="nav-item"><a class="nav-link" href="/agencies">Agencies</a></li>
+          <li class="nav-item"><a class="nav-link" href="/analytics">Analytics</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-
-
-  <!-- MAIN CONTENT -->
   <div class="container py-5">
     <h1 class="text-center mb-4">Space Agencies</h1>
     <input id="searchInput" class="form-control mb-4 text-dark" placeholder="Search Agency...">
@@ -99,25 +109,30 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
+    particlesJS.load('particles-js', '/static/data/particles.json', function () {
+      console.log('🌌 Particles.js loaded on agencies page');
+    });
+
     fetch("/static/data/agencies.json")
       .then(response => response.json())
       .then(agencies => {
         const container = document.getElementById('agencyGrid');
 
         agencies.forEach(agency => {
-          const isAmerican = agency.country.toLowerCase().includes("united states") || agency.country.toLowerCase().includes("usa") || agency.name.toLowerCase().includes("nasa") || agency.name.toLowerCase().includes("spacex");
+          const isAlly = agency.country.toLowerCase().includes("usa") || agency.country.toLowerCase().includes("nato") || agency.country.toLowerCase().includes("japan") || agency.name.toLowerCase().includes("nasa") || agency.name.toLowerCase().includes("spacex") || agency.name.toLowerCase().includes("blue origin") || agency.name.toLowerCase().includes("ula");
 
-          const websiteBtn = isAmerican && agency.website ? `<a href="${agency.website}" target="_blank" class="btn-website">Official Website</a>` : "";
+          const logoPath = agency.logo ? `/static/logos/${agency.logo}` : '/static/logos/default-agency.svg';
+          const websiteBtn = isAlly && agency.website ? `<a href="${agency.website}" target="_blank" class="btn-website">Official Website</a>` : "";
 
           container.innerHTML += `
             <div class="col-md-6 col-lg-4 mb-4">
               <div class="card text-white text-center h-100 p-4">
-                <img src="/static/logos/${agency.logo}" alt="${agency.name}" class="agency-logo" data-bs-toggle="tooltip" title="Founded in ${agency.founded}">
+                <img src="${logoPath}" alt="${agency.name}" class="agency-logo" data-bs-toggle="tooltip" title="Founded in ${agency.founded}">
                 <h5 class="card-title">${agency.name}</h5>
-                <p><img src="${agency.flag}" alt="flag" style="width: 20px;"> ${agency.country}</p>
+                <p><span>${agency.flag}</span> ${agency.country}</p>
                 <p><strong>Founded:</strong> ${agency.founded}</p>
                 <p><strong>Launches:</strong> ${agency.launches}</p>
                 ${websiteBtn}

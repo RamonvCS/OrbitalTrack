@@ -7,14 +7,40 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
   <style>
-    body {
-      background-image: url("{{ url_for('static', filename='logos/bg_space.png') }}");
+        body {
+      background-image: url("/static/logos/bg_space.png");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: white;
       font-family: 'Segoe UI', sans-serif;
+      position: relative;
+      z-index: 0;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      background-image: url("/static/logos/bg_space.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -2;
+      opacity: 0.2;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     #map {
@@ -27,7 +53,7 @@
     }
 
     .card {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -74,49 +100,51 @@
       margin: 0 auto 30px auto;
       display: block;
     }
+
+    .stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  width: 2px;
+  height: 2px;
+  animation: twinkle 2s infinite ease-in-out;
+  opacity: 0.5;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
   </style>
 </head>
 
 <body class="bg-dark text-light">
-  <!-- MODAL de Detalles de la Misión -->
-  <div class="modal fade" id="launchModal" tabindex="-1" aria-labelledby="launchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-dark text-light">
-        <div class="modal-header">
-          <h5 class="modal-title" id="launchModalLabel">Mission Details</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="d-flex align-items-center mb-3">
-            <img id="modalLogo" src="" alt="Agency Logo" style="width: 60px; height: 60px; object-fit: contain; margin-right: 15px;">
-            <div>
-              <h5 id="modalMission" class="mb-1 text-info">Mission Name</h5>
-              <p class="mb-0 text-muted"><small id="modalDate"></small></p>
-            </div>
-          </div>
-          <p><strong>Agency:</strong> <span id="modalAgency"></span></p>
-          <p><strong>Pad:</strong> <span id="modalPad"></span></p>
-          <p><strong>Description:</strong> <span id="modalDesc"></span></p>
-          <p><strong>More Info:</strong> <a id="modalLink" href="#" target="_blank">Launch Web Page</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
+
+  <!-- Fondo de estrellas -->
+  <div id="particles-js"></div>
 
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg" style="background-color: #1098f7;">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">🚀 OrbitalTrack</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="#launches">Upcoming Launches</a></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="#map">Map</a></li> -->
           <li class="nav-item"><a class="nav-link" href="{{ url_for('agencies') }}">Agencies</a></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="#">Satellites</a></li> -->
           <li class="nav-item"><a class="nav-link" href="#">Analytics</a></li>
           <li class="nav-item"><a class="nav-link" href="#">About</a></li>
         </ul>
@@ -148,36 +176,61 @@
       {% endfor %}
     </select>
 
-<!-- Tarjetas de lanzamientos -->
-<div class="row">
-  {% for launch in launches %}
-    <div class="col-md-6 mb-4 launch-card" data-agency="{{ launch.launch_service_provider.name|lower|replace(' ', '') }}">
-      <div class="card text-white shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title mb-1">{{ launch.name }}</h5>
-          <p class="card-text mb-0">
-            <strong>Date:</strong> {{ launch.formatted_net }}<br>
-            <strong>Agency:</strong> {{ launch.launch_service_provider.name }}<br>
-            <strong>Countdown:</strong> <span class="countdown" data-launch="{{ launch.formatted_net }}"></span>
-          </p>
-          <button class="btn btn-sm btn-outline-info mt-2"
-            onclick="openModal(
-              `{{ launch.name }}`,
-              `{{ launch.launch_service_provider.name }}`,
-              `{{ launch.pad.name }}`,
-              `{{ launch.formatted_net }}`,
-              `{{ launch.mission.description | default('No description', true) }}`,
-              `{{ launch.launch_service_provider.name|lower|replace(' ', '') }}`,
-              `{{ launch.webcast | default('#') }}`
-            )">
-            View Details
-          </button>
+    <!-- Tarjetas de lanzamientos -->
+    <div class="row">
+      {% for launch in launches %}
+        <div class="col-md-6 mb-4 launch-card" data-agency="{{ launch.launch_service_provider.name|lower|replace(' ', '') }}">
+          <div class="card text-white shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title mb-1">{{ launch.name }}</h5>
+              <p class="card-text mb-0">
+                <strong>Date:</strong> {{ launch.formatted_net }}<br>
+                <strong>Agency:</strong> {{ launch.launch_service_provider.name }}<br>
+                <strong>Countdown:</strong> <span class="countdown" data-launch="{{ launch.formatted_net }}"></span>
+              </p>
+              <button class="btn btn-sm btn-outline-info mt-2"
+                onclick="openModal(
+                  `{{ launch.name }}`,
+                  `{{ launch.launch_service_provider.name }}`,
+                  `{{ launch.pad.name }}`,
+                  `{{ launch.formatted_net }}`,
+                  `{{ launch.mission.description | default('No description', true) }}`,
+                  `{{ launch.launch_service_provider.name|lower|replace(' ', '') }}`,
+                  `{{ launch.webcast | default('#') }}`
+                )">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal fade" id="launchModal" tabindex="-1" aria-labelledby="launchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="launchModalLabel">Mission Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center mb-3">
+            <img id="modalLogo" src="" alt="Agency Logo" style="width: 60px; height: 60px; object-fit: contain; margin-right: 15px;">
+            <div>
+              <h5 id="modalMission" class="mb-1 text-info">Mission Name</h5>
+              <p class="mb-0 text-muted"><small id="modalDate"></small></p>
+            </div>
+          </div>
+          <p><strong>Agency:</strong> <span id="modalAgency"></span></p>
+          <p><strong>Pad:</strong> <span id="modalPad"></span></p>
+          <p><strong>Description:</strong> <span id="modalDesc"></span></p>
+          <p><strong>More Info:</strong> <a id="modalLink" href="#" target="_blank">Launch Web Page</a></p>
         </div>
       </div>
     </div>
-  {% endfor %}
-</div>
-
+  </div>
 
   <!-- FOOTER -->
   <footer class="text-center text-muted py-4">
@@ -190,8 +243,12 @@
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
+    particlesJS.load('particles-js', '/static/data/particles.json', function () {
+      console.log('🌌 Particles.js config loaded');
+    });
+
     const map = L.map('map', {
       worldCopyJump: true,
       maxBoundsViscosity: 1.0,
