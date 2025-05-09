@@ -15,7 +15,11 @@
     "founded": 2002,
     "launches": 300,
     "website": "https://www.spacex.com",
+<<<<<<< HEAD
     "logo": "spacex.svg"
+=======
+    "logo": ""
+>>>>>>> dev
   },
   {
     "name": "Blue Origin",
@@ -24,7 +28,11 @@
     "founded": 2000,
     "launches": 25,
     "website": "https://www.blueorigin.com",
+<<<<<<< HEAD
     "logo": "blueorigin.svg"
+=======
+    "logo": "blue-origin8550.jpg"
+>>>>>>> dev
   },
   {
     "name": "ULA (United Launch Alliance)",
@@ -33,6 +41,7 @@
     "founded": 2006,
     "launches": 150,
     "website": "https://www.ulalaunch.com",
+<<<<<<< HEAD
     "logo": "ula.svg"
   },
   {
@@ -52,6 +61,18 @@
     "launches": 1100,
     "logo": "roscosmos.svg",
     "news": "https://www.reuters.com/technology/space/"
+=======
+    "logo": "United_Launch_Alliance-Logo.svg"
+  },
+  {
+    "name": "ESA",
+    "country": "EU (NATO Partner)",
+    "flag": "🇪🇺",
+    "founded": 1975,
+    "launches": 300,
+    "website": "https://www.esa.int",
+    "logo": "ESA-logo-and-wordmark.png"
+>>>>>>> dev
   },
   {
     "name": "JAXA",
@@ -59,6 +80,7 @@
     "flag": "🇯🇵",
     "founded": 2003,
     "launches": 250,
+<<<<<<< HEAD
     "logo": "jaxa.svg",
     "news": "https://www.nytimes.com/topic/organization/japan-aerospace-exploration-agency"
   },
@@ -79,5 +101,9 @@
     "launches": 375,
     "logo": "isro.svg",
     "news": "https://www.bbc.com/news/world/asia/india"
+=======
+    "website": "https://global.jaxa.jp",
+    "logo": "jaxa.svg"
+>>>>>>> dev
   }
 ]
