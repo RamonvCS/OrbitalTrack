@@ -118,6 +118,14 @@
     margin: 2rem 0;
   }
 
+  .chart-grid .glass {
+    padding: 1rem;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .insight-box {
     max-width: 900px;
     margin: 2rem auto;
@@ -131,7 +139,7 @@
 <body>
   <div id="particles-js"></div>
 
-  <!-- NAVABR -->
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg shadow">
     <div class="container-fluid">
       <a class="navbar-brand fw-bold text-white fs-4" href="#">🚀 OrbitalTrack</a>
@@ -150,7 +158,7 @@
             <a class="nav-link text-white" href="{{ url_for('analytics') }}">Analytics</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" href="#">About</a>
+            <a class="nav-link text-white" href="{{ url_for('about') }}">About</a>
           </li>
         </ul>
       </div>
@@ -186,7 +194,7 @@
         <canvas id="barChart"></canvas>
       </div>
       <div class="glass">
-        <canvas id="bubbleChart"></canvas>
+        <canvas id="lineChart"></canvas>
       </div>
     </div>
 
@@ -210,7 +218,7 @@
         }]
       },
       options: {
-        plugins: { legend: { position: 'bottom' } },
+        plugins: { legend: { position: 'bottom', labels: { color: 'white' } } },
         cutout: '70%'
       }
     });
@@ -227,27 +235,47 @@
       },
       options: {
         indexAxis: 'y',
-        plugins: { legend: { display: false } }
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
       }
     });
 
-    new Chart(document.getElementById('bubbleChart'), {
-      type: 'bubble',
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
       data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
         datasets: [{
-          label: 'Launch Payloads',
-          data: [
-            {x: 300, y: 500, r: 15},
-            {x: 450, y: 800, r: 10},
-            {x: 600, y: 300, r: 20}
-          ],
-          backgroundColor: 'rgba(52, 152, 219, 0.6)'
+          label: 'Payload Mass (kg)',
+          data: [4500, 5200, 3900, 6200, 7100],
+          borderColor: '#1abc9c',
+          backgroundColor: 'rgba(26, 188, 156, 0.2)',
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: '#1abc9c'
         }]
       },
       options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        },
         scales: {
-          x: { title: { display: true, text: 'Payload (kg)' } },
-          y: { title: { display: true, text: 'Altitude (km)' } }
+          x: {
+            ticks: { color: 'white' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          },
+          y: {
+            ticks: { color: 'white' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            title: {
+              display: true,
+              text: 'Mass (kg)',
+              color: 'white'
+            }
+          }
         }
       }
     });
